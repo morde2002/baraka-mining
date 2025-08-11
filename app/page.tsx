@@ -109,7 +109,7 @@ export default function HomePage() {
     document.getElementById('gems')?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const handleGemClick = (gemId) => {
+  const handleGemClick = (gemId: string) => {
     // Original redirection approach - simulate Link component behavior
     window.location.href = `/gems/${gemId}`
   }
