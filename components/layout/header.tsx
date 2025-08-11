@@ -30,46 +30,21 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="hidden lg:block bg-black text-white py-2 text-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-green-500" />
-                <span>Baraka Mining & Minerals Ltd, Voi, Taita Taveta, Kenya</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-green-500" />
-                <span>Daily: 8:00 AM to 10:00 PM</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-green-500" />
-                <span>+254 769 411 649</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-green-500" />
-                <span>barakaminingmi4@gmail.com</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header */}
-      <header className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-black/95 backdrop-blur-md shadow-lg border-b border-green-600/20' 
+          : 'bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm'
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
+            
+            {/* Logo - Clean with only hover effect */}
+            <Link href="/" className="group">
               <img 
-                src="/baraka-mining-logo2.jpg" 
+                src="/baraka-mining-light.png" 
                 alt="Baraka Mining & Minerals LTD" 
-                className="h-12 w-auto"
+                className="h-16 w-auto group-hover:scale-105 transition-transform duration-300"
               />
             </Link>
 
@@ -79,51 +54,60 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`text-white hover:text-green-500 transition-colors relative ${
-                    pathname === item.href ? 'text-green-500' : ''
+                  className={`text-white hover:text-green-400 transition-all duration-300 relative font-medium ${
+                    pathname === item.href ? 'text-green-400' : ''
                   }`}
                 >
                   {item.name}
                   {pathname === item.href && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-500" />
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-400 rounded-full" />
                   )}
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-400 rounded-full scale-x-0 hover:scale-x-100 transition-transform duration-300" />
                 </Link>
               ))}
             </nav>
 
             {/* CTA Button */}
             <div className="hidden lg:block">
-              <Button asChild className="bg-green-600 hover:bg-green-700">
-                <Link href="/gems">Find A Gem</Link>
+              <Button asChild className="bg-green-600 hover:bg-green-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Link href="/gems" className="font-semibold">Find A Gem</Link>
               </Button>
             </div>
 
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" className="text-white">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-green-400 transition-colors">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-black text-white">
-                <img 
-                  src="/logo.png" 
-                  alt="Baraka Mining & Minerals LTD" 
-                  className="h-10 w-auto mb-8"
-                />
-                <div className="flex flex-col space-y-6 mt-8">
+              <SheetContent side="right" className="bg-black/95 backdrop-blur-md text-white border-l border-green-600/20">
+                {/* Mobile Logo */}
+                <div className="flex items-center space-x-3 mb-8">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white">
+                      <path fill="currentColor" d="M12,2L2,7V10C2,16.08 6.21,21.26 12,22C17.79,21.26 22,16.08 22,10V7L12,2M12,4.14L18.45,7.5C18.31,8.91 17.77,10.26 16.92,11.39C16.07,12.52 14.95,13.4 13.68,13.95C13.29,14.13 12.87,14.24 12.44,14.3C12.15,14.34 11.85,14.34 11.56,14.3C11.13,14.24 10.71,14.13 10.32,13.95C9.05,13.4 7.93,12.52 7.08,11.39C6.23,10.26 5.69,8.91 5.55,7.5L12,4.14Z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-white font-bold text-lg">Baraka Mining</div>
+                    <div className="text-green-400 text-xs font-medium uppercase tracking-wide">Premium Gemstones</div>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col space-y-6">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`text-lg hover:text-green-500 transition-colors ${
-                        pathname === item.href ? 'text-green-500' : ''
+                      className={`text-lg hover:text-green-400 transition-colors font-medium ${
+                        pathname === item.href ? 'text-green-400' : ''
                       }`}
                     >
                       {item.name}
                     </Link>
                   ))}
-                  <Button asChild className="bg-green-600 hover:bg-green-700 mt-4">
+                  <Button asChild className="bg-green-600 hover:bg-green-700 mt-6 shadow-lg">
                     <Link href="/gems">Find A Gem</Link>
                   </Button>
                 </div>
