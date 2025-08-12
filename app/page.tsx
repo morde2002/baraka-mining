@@ -30,19 +30,19 @@ const heroSlides = [
 const gemTypes = [
   {
     id: 'round-cut',
-    image: '/service-1.png',
+    image: '/round cut.jpg',
     title: 'Round Cut Tsavorite',
     description: 'Classic round brilliance that maximizes light reflection',
   },
   {
     id: 'pear-shaped',
-    image: '/service-2.png',
+    image: '/pear shaped tsavorite cut.jpg',
     title: 'Pear Shaped Cut',
     description: 'Elegant teardrop shape combining round and marquise cuts',
   },
   {
     id: 'emerald-shaped',
-    image: '/service-3.jpg',
+    image: '/emerald shaped tsavorite cut.jpg',
     title: 'Emerald Cut',
     description: 'Sophisticated step-cut showcasing clarity and color',
   },
@@ -261,18 +261,18 @@ export default function HomePage() {
                         alt={gem.title}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                       <div className="absolute top-4 right-4">
                         <div className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                           Premium
                         </div>
                       </div>
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">
-                          {gem.title}
-                        </h3>
-                        <p className="text-green-400 text-sm mt-1">Click to view details →</p>
-                      </div>
+                    </div>
+                    {/* Moved title and description outside the image container */}
+                    <div className="p-4">
+                      <h3 className="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">
+                        {gem.title}
+                      </h3>
+                      <p className="text-green-400 text-sm mt-1">Click to view details →</p>
                     </div>
                   </div>
                 </a>

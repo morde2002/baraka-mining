@@ -164,11 +164,15 @@ export default function GemsPage() {
                           Natural
                         </div>
                       </div>
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">
-                          {gem.title}
-                        </h3>
-                        <p className="text-green-400 text-sm mt-1">Raw & Uncut</p>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                        {gem.title}
+                      </h3>
+                      <p className="text-white text-sm mt-1">Raw & Uncut</p>
+                      <div className="text-green-500 font-medium flex items-center">
+                        View Details 
+                        <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
                       </div>
                     </div>
                   </CardContent>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import emailjs from '@emailjs/browser'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -58,6 +59,11 @@ export default function ContactPage() {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '1OVn5t4eVwEZf51VK')
+  }, [])
 
   // Auto-hide message after 10 seconds
   useEffect(() => {
@@ -118,26 +124,32 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/contact.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          name: formData.name,
-          email: formData.email,
-          dimensions: formData.dimensions,
-          clarity: formData.clarity,
-          shapes: formData.shapes,
-          message: formData.message,
-        }),
-      })
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        from_name: formData.name.trim(),
+        from_email: formData.email.trim(),
+        to_name: 'Baraka Mining Team', // You can customize this
+        message: formData.message.trim(),
+        dimensions: formData.dimensions.trim() || 'Not specified',
+        clarity: formData.clarity || 'Not specified',
+        shapes: formData.shapes || 'Not specified',
+        // Add timestamp for reference
+        timestamp: new Date().toLocaleString(),
+      }
 
-      if (response.ok) {
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_74555i8',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_wetrxq9',
+        templateParams
+      )
+
+      if (response.status === 200) {
         setMessage({
           type: 'success',
           text: 'Thank you for your inquiry! We will get back to you within 24 hours.'
         })
+        
         // Reset form
         setFormData({
           name: '',
@@ -150,12 +162,13 @@ export default function ContactPage() {
         setTouchedFields(new Set())
         setErrors({})
       } else {
-        throw new Error('Failed to send message')
+        throw new Error('Failed to send email')
       }
     } catch (error) {
+      console.error('EmailJS Error:', error)
       setMessage({
         type: 'error',
-        text: 'Failed to send message. Please try again later.'
+        text: 'Failed to send message. Please try again later or contact us directly.'
       })
     } finally {
       setIsSubmitting(false)

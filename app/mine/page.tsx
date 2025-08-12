@@ -9,46 +9,49 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, Camera, Mountain, Users, Shield } from 'lucide-react'
 
+// Reversed order - newest images first (37 down to 19)
 const initialImages = [
-  "/worker (1).jpg", 
-  "/worker (2).jpg", 
-  "/worker (3).jpg", 
-  "/worker (4).jpg",
-  "/worker (5).jpg",
-  "/worker (6).jpg",
-  "/worker (7).jpg",
-  "/worker (8).jpg",
-  "/worker (9).jpg",
-  "/worker (10).jpg",
-  "/worker (11).jpg",
-  "/worker (12).jpg",
-  "/worker (13).jpg",
-  "/worker (14).jpg",
-  "/worker (15).jpg",
-  "/worker (16).jpg",
-  "/worker (17).jpg",
-  "/worker (18).jpg",]
+  { src: "/worker (37).jpg", number: 37, isHoliday: true },
+  { src: "/worker (36).jpg", number: 36, isHoliday: true },
+  { src: "/worker (35).jpg", number: 35, isHoliday: true },
+  { src: "/worker (34).jpg", number: 34, isHoliday: false },
+  { src: "/worker (33).jpg", number: 33, isHoliday: false },
+  { src: "/worker (32).jpg", number: 32, isHoliday: false },
+  { src: "/worker (31).jpg", number: 31, isHoliday: false },
+  { src: "/worker (30).jpg", number: 30, isHoliday: false },
+  { src: "/worker (29).jpg", number: 29, isHoliday: false },
+  { src: "/worker (28).jpg", number: 28, isHoliday: false },
+  { src: "/worker (27).jpg", number: 27, isHoliday: false },
+  { src: "/worker (26).jpg", number: 26, isHoliday: false },
+  { src: "/worker (25).jpg", number: 25, isHoliday: false },
+  { src: "/worker (24).jpg", number: 24, isHoliday: false },
+  { src: "/worker (23).jpg", number: 23, isHoliday: false },
+  { src: "/worker (22).jpg", number: 22, isHoliday: false },
+  { src: "/worker (21).jpg", number: 21, isHoliday: false },
+  { src: "/worker (20).jpg", number: 20, isHoliday: false },
+]
 
+// Additional images in descending order (18 down to 1)
 const additionalImages = [
-  "/worker (19).jpg",
-  "/worker (20).jpg",
-  "/worker (21).jpg",
-  "/worker (22).jpg",
-  "/worker (23).jpg",
-  "/worker (24).jpg",
-  "/worker (25).jpg",
-  "/worker (26).jpg",
-  "/worker (27).jpg",
-  "/worker (28).jpg",
-  "/worker (29).jpg",
-  "/worker (30).jpg",
-  "/worker (31).jpg",
-  "/worker (32).jpg",
-  "/worker (33).jpg",
-  "/worker (34).jpg",
-  "/worker (35).jpg",
-  "/worker (36).jpg",
-  "/worker (37).jpg",
+  { src: "/worker (19).jpg", number: 19, isHoliday: false },
+  { src: "/worker (18).jpg", number: 18, isHoliday: false },
+  { src: "/worker (17).jpg", number: 17, isHoliday: false },
+  { src: "/worker (16).jpg", number: 16, isHoliday: false },
+  { src: "/worker (15).jpg", number: 15, isHoliday: false },
+  { src: "/worker (14).jpg", number: 14, isHoliday: false },
+  { src: "/worker (13).jpg", number: 13, isHoliday: false },
+  { src: "/worker (12).jpg", number: 12, isHoliday: false },
+  { src: "/worker (11).jpg", number: 11, isHoliday: false },
+  { src: "/worker (10).jpg", number: 10, isHoliday: false },
+  { src: "/worker (9).jpg", number: 9, isHoliday: false },
+  { src: "/worker (8).jpg", number: 8, isHoliday: false },
+  { src: "/worker (7).jpg", number: 7, isHoliday: false },
+  { src: "/worker (6).jpg", number: 6, isHoliday: false },
+  { src: "/worker (5).jpg", number: 5, isHoliday: false },
+  { src: "/worker (4).jpg", number: 4, isHoliday: false },
+  { src: "/worker (3).jpg", number: 3, isHoliday: false },
+  { src: "/worker (2).jpg", number: 2, isHoliday: false },
+  { src: "/worker (1).jpg", number: 1, isHoliday: false },
 ]
 
 const processSteps = [
@@ -165,7 +168,7 @@ export default function MinePage() {
               <h2 className="text-4xl font-bold text-white font-playfair mb-4">Mining Operations Gallery</h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
                 Witness the dedication and skill of our mining team as they extract Tsavorite gemstones 
-                from the rich deposits of Taita Taveta.
+                from the rich deposits of Taita Taveta. <span className="text-green-400">Latest images shown first.</span>
               </p>
             </div>
 
@@ -175,18 +178,28 @@ export default function MinePage() {
                   <CardContent className="p-0 relative">
                     <div className="relative overflow-hidden aspect-square">
                       <img
-                        src={image || "/placeholder.svg"}
-                        alt={`Mining operation ${index + 1}`}
+                        src={image.src || "/placeholder.svg"}
+                        alt={`Mining operation ${image.number}`}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      
+                      {/* Holiday Badge */}
+                      {image.isHoliday && (
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                          🏖️ Holiday
+                        </div>
+                      )}
+                      
                       <div className="absolute bottom-4 left-4 right-4 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <p className="text-white text-sm font-medium">Mining Operation #{index + 1}</p>
-                        <p className="text-gray-300 text-xs">Taita Taveta, Kenya</p>
+                        <p className="text-white text-sm font-medium">
+                          {image.isHoliday ? "Workers on Holiday" : `Mining Operation #${image.number}`}
+                        </p>
+                        <p className="text-gray-300 text-xs">
+                          {image.isHoliday ? "Well-deserved break time" : "Taita Taveta, Kenya"}
+                        </p>
                       </div>
-                      <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <Camera className="h-4 w-4 text-white" />
-                      </div>
+
                     </div>
                   </CardContent>
                 </Card>
