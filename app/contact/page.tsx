@@ -1,7 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import emailjs from '@emailjs/browser'
+import ReCAPTCHA from "react-google-recaptcha"
+import type { ReCAPTCHAProps } from "react-google-recaptcha"
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -9,7 +11,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Phone, Mail, MapPin, Clock, Send, MessageCircle, Users, Award } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, Send, MessageCircle, Users, Shield } from 'lucide-react'
+
+// Type assertion for ReCAPTCHA to fix TypeScript issues
+const ReCAPTCHAComponent = ReCAPTCHA as any
 
 const clarityOptions = [
   'IF (Internally Flawless)',
@@ -30,6 +35,14 @@ const shapeOptions = [
   'Cushion shaped tsavorite cut',
 ]
 
+// Spam detection words (add more as needed)
+const spamKeywords = [
+  'bitcoin', 'crypto', 'cryptocurrency', 'investment', 'loan', 'casino', 
+  'gambling', 'viagra', 'cialis', 'weight loss', 'make money', 'get rich',
+  'mlm', 'pyramid scheme', 'offshore', 'tax haven', 'free money',
+  'click here', 'limited time', 'act now', 'congratulations you won'
+]
+
 interface FormData {
   name: string
   email: string
@@ -43,6 +56,8 @@ interface FormErrors {
   name?: string
   email?: string
   message?: string
+  captcha?: string
+  general?: string
 }
 
 export default function ContactPage() {
@@ -59,6 +74,16 @@ export default function ContactPage() {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Security features
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const [honeypot, setHoneypot] = useState('')
+  const [lastSubmission, setLastSubmission] = useState<number | null>(null)
+  const [submissionCount, setSubmissionCount] = useState(0)
+  const [startTime] = useState(Date.now())
+  
+  // ReCAPTCHA ref - using any to avoid type conflicts
+  const recaptchaRef = useRef<any>(null)
 
   // Initialize EmailJS
   useEffect(() => {
@@ -75,20 +100,98 @@ export default function ContactPage() {
     }
   }, [message])
 
+  // Security validation functions
+  const detectSpam = (text: string): boolean => {
+    const lowerText = text.toLowerCase()
+    return spamKeywords.some(keyword => lowerText.includes(keyword))
+  }
+
+  const validateFormSecurity = (): { isValid: boolean; error?: string } => {
+    const now = Date.now()
+    
+    // 1. Honeypot check (bot detection)
+    if (honeypot.trim()) {
+      console.log('🚫 Bot detected: Honeypot filled')
+      return { isValid: false, error: 'Security validation failed. Please try again.' }
+    }
+
+    // 2. Rate limiting (1 minute between submissions)
+    if (lastSubmission && (now - lastSubmission < 60000)) {
+      const remainingTime = Math.ceil((60000 - (now - lastSubmission)) / 1000)
+      return { 
+        isValid: false, 
+        error: `Please wait ${remainingTime} seconds before sending another message.` 
+      }
+    }
+
+    // 3. Form submission count limit (max 3 per session)
+    if (submissionCount >= 3) {
+      return { 
+        isValid: false, 
+        error: 'Maximum submissions reached for this session. Please refresh the page.' 
+      }
+    }
+
+    // 4. Time-based check (form filled too quickly - likely bot)
+    const timeTaken = now - startTime
+    if (timeTaken < 10000) { // Less than 10 seconds
+      return { 
+        isValid: false, 
+        error: 'Please take more time to fill out the form properly.' 
+      }
+    }
+
+    // 5. Spam content detection
+    const fullText = `${formData.name} ${formData.email} ${formData.message}`.toLowerCase()
+    if (detectSpam(fullText)) {
+      console.log('🚫 Spam content detected')
+      return { 
+        isValid: false, 
+        error: 'Your message contains prohibited content. Please revise and try again.' 
+      }
+    }
+
+    // 6. CAPTCHA validation
+    if (!captchaToken) {
+      return { 
+        isValid: false, 
+        error: 'Please complete the security verification (CAPTCHA).' 
+      }
+    }
+
+    // 7. Suspicious patterns
+    const hasRepeatedChars = /(.)\1{4,}/.test(fullText) // 5+ repeated characters
+    const hasExcessiveLinks = (fullText.match(/http|www\./g) || []).length > 2
+    const hasExcessiveCaps = (fullText.match(/[A-Z]/g) || []).length / fullText.length > 0.5
+    
+    if (hasRepeatedChars || hasExcessiveLinks || hasExcessiveCaps) {
+      return { 
+        isValid: false, 
+        error: 'Please check your message format and try again.' 
+      }
+    }
+
+    return { isValid: true }
+  }
+
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
       case 'name':
         if (!value.trim()) return 'Name is required'
         if (value.trim().length < 2) return 'Name must be at least 2 characters'
+        if (value.trim().length > 50) return 'Name must be less than 50 characters'
+        if (!/^[a-zA-Z\s'-]+$/.test(value.trim())) return 'Name contains invalid characters'
         return undefined
       case 'email':
         if (!value.trim()) return 'Email is required'
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(value)) return 'Please enter a valid email address'
+        if (value.length > 100) return 'Email address is too long'
         return undefined
       case 'message':
         if (!value.trim()) return 'Message is required'
         if (value.trim().length < 10) return 'Message must be at least 10 characters'
+        if (value.trim().length > 1000) return 'Message must be less than 1000 characters'
         return undefined
       default:
         return undefined
@@ -97,6 +200,11 @@ export default function ContactPage() {
 
   const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
+    
+    // Clear general errors when user starts typing
+    if (errors.general) {
+      setErrors(prev => ({ ...prev, general: undefined }))
+    }
     
     // Validate field if it has been touched
     if (touchedFields.has(name)) {
@@ -111,12 +219,21 @@ export default function ContactPage() {
     setErrors(prev => ({ ...prev, [name]: error }))
   }
 
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token)
+    if (token && errors.captcha) {
+      setErrors(prev => ({ ...prev, captcha: undefined }))
+    }
+  }
+
   const isFormValid = () => {
     const requiredFields = ['name', 'email', 'message']
-    return requiredFields.every(field => {
+    const hasValidFields = requiredFields.every(field => {
       const value = formData[field as keyof FormData]
       return value.trim() && !validateField(field, value)
     })
+    
+    return hasValidFields && captchaToken && !errors.general
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,17 +241,42 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
+      // Security validation
+      const securityCheck = validateFormSecurity()
+      if (!securityCheck.isValid) {
+        setErrors(prev => ({ ...prev, general: securityCheck.error }))
+        setMessage({
+          type: 'error',
+          text: securityCheck.error || 'Security validation failed'
+        })
+        return
+      }
+
+      // Validate all required fields
+      const fieldErrors: FormErrors = {}
+      const requiredFields = ['name', 'email', 'message'] as const
+      
+      requiredFields.forEach(field => {
+        const error = validateField(field, formData[field])
+        if (error) fieldErrors[field] = error
+      })
+
+      if (Object.keys(fieldErrors).length > 0) {
+        setErrors(fieldErrors)
+        return
+      }
+
       // Prepare template parameters for EmailJS
       const templateParams = {
         from_name: formData.name.trim(),
         from_email: formData.email.trim(),
-        to_name: 'Baraka Mining Team', // You can customize this
+        to_name: 'Baraka Mining Team',
         message: formData.message.trim(),
         dimensions: formData.dimensions.trim() || 'Not specified',
         clarity: formData.clarity || 'Not specified',
         shapes: formData.shapes || 'Not specified',
-        // Add timestamp for reference
         timestamp: new Date().toLocaleString(),
+        security_token: captchaToken?.substring(0, 10) + '...', // Partial token for verification
       }
 
       // Send email using EmailJS
@@ -150,6 +292,10 @@ export default function ContactPage() {
           text: 'Thank you for your inquiry! We will get back to you within 24 hours.'
         })
         
+        // Update security tracking
+        setLastSubmission(Date.now())
+        setSubmissionCount(prev => prev + 1)
+        
         // Reset form
         setFormData({
           name: '',
@@ -161,6 +307,13 @@ export default function ContactPage() {
         })
         setTouchedFields(new Set())
         setErrors({})
+        setCaptchaToken(null)
+        setHoneypot('')
+        
+        // Reset CAPTCHA
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset()
+        }
       } else {
         throw new Error('Failed to send email')
       }
@@ -215,17 +368,29 @@ export default function ContactPage() {
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Enhanced Contact Form */}
+            {/* Enhanced Contact Form with Security */}
             <Card className="bg-gray-800 border-gray-700 shadow-2xl hover:border-green-600/50 transition-all duration-300">
               <CardHeader className="pb-6">
                 <CardTitle className="text-2xl text-white flex items-center">
                   <Send className="h-6 w-6 text-green-500 mr-3" />
                   Send Us A Message
+                  <Shield className="h-5 w-5 text-blue-400 ml-2" />
                 </CardTitle>
                 <p className="text-gray-400">Fill out the form below and we'll respond within 24 hours.</p>
               </CardHeader>
               <CardContent className="pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot field - hidden from users */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Input
@@ -236,6 +401,7 @@ export default function ContactPage() {
                         className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
                           errors.name ? 'border-red-500 ring-red-500' : ''
                         }`}
+                        maxLength={50}
                       />
                       {errors.name && (
                         <p className="text-red-400 text-sm mt-2 flex items-center">
@@ -254,6 +420,7 @@ export default function ContactPage() {
                         className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
                           errors.email ? 'border-red-500 ring-red-500' : ''
                         }`}
+                        maxLength={100}
                       />
                       {errors.email && (
                         <p className="text-red-400 text-sm mt-2 flex items-center">
@@ -270,6 +437,7 @@ export default function ContactPage() {
                       value={formData.dimensions}
                       onChange={(e) => handleInputChange('dimensions', e.target.value)}
                       className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200"
+                      maxLength={50}
                     />
                   </div>
 
@@ -314,7 +482,11 @@ export default function ContactPage() {
                       className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
                         errors.message ? 'border-red-500 ring-red-500' : ''
                       }`}
+                      maxLength={1000}
                     />
+                    <div className="text-right text-xs text-gray-500 mt-1">
+                      {formData.message.length}/1000 characters
+                    </div>
                     {errors.message && (
                       <p className="text-red-400 text-sm mt-2 flex items-center">
                         <span className="w-1 h-1 bg-red-400 rounded-full mr-2" />
@@ -322,6 +494,32 @@ export default function ContactPage() {
                       </p>
                     )}
                   </div>
+
+                  {/* reCAPTCHA */}
+                  <div className="flex justify-center">
+                    <ReCAPTCHAComponent
+                      ref={recaptchaRef}
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LezT6QrAAAAAEGgmvn0zlvcudySMysFId2rC2wS"} // Test key
+                      onChange={handleCaptchaChange}
+                      theme="dark"
+                    />
+                  </div>
+                  {errors.captcha && (
+                    <p className="text-red-400 text-sm text-center flex items-center justify-center">
+                      <span className="w-1 h-1 bg-red-400 rounded-full mr-2" />
+                      {errors.captcha}
+                    </p>
+                  )}
+
+                  {/* General error display */}
+                  {errors.general && (
+                    <div className="bg-red-900/20 text-red-300 border border-red-500 rounded-lg p-4 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-3" />
+                        <span className="font-medium">{errors.general}</span>
+                      </div>
+                    </div>
+                  )}
 
                   <Button 
                     type="submit" 
@@ -336,7 +534,8 @@ export default function ContactPage() {
                     ) : (
                       <div className="flex items-center">
                         <Send className="h-5 w-5 mr-2" />
-                        Send Message
+                        Send Secure Message
+                        <Shield className="h-4 w-4 ml-2" />
                       </div>
                     )}
                   </Button>
@@ -356,6 +555,14 @@ export default function ContactPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* More discrete security info - IMPROVED */}
+                  <div className="text-xs text-gray-500 text-center">
+                    <p className="flex items-center justify-center">
+                      <Shield className="h-3 w-3 mr-1" />
+                      Secure form with spam protection
+                    </p>
+                  </div>
                 </form>
               </CardContent>
             </Card>
