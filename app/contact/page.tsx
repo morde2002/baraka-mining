@@ -1,46 +1,64 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
-import emailjs from '@emailjs/browser'
+import type React from "react"
+
+import { useState, useEffect, useRef } from "react"
+import emailjs from "@emailjs/browser"
 import ReCAPTCHA from "react-google-recaptcha"
-import type { ReCAPTCHAProps } from "react-google-recaptcha"
-import Header from '@/components/layout/header'
-import Footer from '@/components/layout/footer'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Phone, Mail, MapPin, Clock, Send, MessageCircle, Users, Shield } from 'lucide-react'
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Phone, Mail, MapPin, Clock, Send, MessageCircle, Users, Shield } from "lucide-react"
 
 // Type assertion for ReCAPTCHA to fix TypeScript issues
 const ReCAPTCHAComponent = ReCAPTCHA as any
 
 const clarityOptions = [
-  'IF (Internally Flawless)',
-  'VVS1 (Very, Very Slightly Included 1)',
-  'VVS2 (Very, Very Slightly Included 2)',
-  'VS1 (Very Slightly Included 1)',
-  'VS2 (Very Slightly Included 2)',
-  'SI1 (Slightly Included 1)',
-  'SI2 (Slightly Included 2)',
+  "IF (Internally Flawless)",
+  "VVS1 (Very, Very Slightly Included 1)",
+  "VVS2 (Very, Very Slightly Included 2)",
+  "VS1 (Very Slightly Included 1)",
+  "VS2 (Very Slightly Included 2)",
+  "SI1 (Slightly Included 1)",
+  "SI2 (Slightly Included 2)",
 ]
 
 const shapeOptions = [
-  'Round Cut',
-  'Pear shaped tsavorite cut',
-  'Trilliant shaped tsavorite cut',
-  'Oval shaped tsavorite cut',
-  'Emerald shaped tsavorite cut',
-  'Cushion shaped tsavorite cut',
+  "Round Cut",
+  "Pear shaped tsavorite cut",
+  "Trilliant shaped tsavorite cut",
+  "Oval shaped tsavorite cut",
+  "Emerald shaped tsavorite cut",
+  "Cushion shaped tsavorite cut",
 ]
 
 // Spam detection words (add more as needed)
 const spamKeywords = [
-  'bitcoin', 'crypto', 'cryptocurrency', 'investment', 'loan', 'casino', 
-  'gambling', 'viagra', 'cialis', 'weight loss', 'make money', 'get rich',
-  'mlm', 'pyramid scheme', 'offshore', 'tax haven', 'free money',
-  'click here', 'limited time', 'act now', 'congratulations you won'
+  "bitcoin",
+  "crypto",
+  "cryptocurrency",
+  "investment",
+  "loan",
+  "casino",
+  "gambling",
+  "viagra",
+  "cialis",
+  "weight loss",
+  "make money",
+  "get rich",
+  "mlm",
+  "pyramid scheme",
+  "offshore",
+  "tax haven",
+  "free money",
+  "click here",
+  "limited time",
+  "act now",
+  "congratulations you won",
 ]
 
 interface FormData {
@@ -62,32 +80,32 @@ interface FormErrors {
 
 export default function ContactPage() {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    dimensions: '',
-    clarity: '',
-    shapes: '',
-    message: ''
+    name: "",
+    email: "",
+    dimensions: "",
+    clarity: "",
+    shapes: "",
+    message: "",
   })
-  
+
   const [errors, setErrors] = useState<FormErrors>({})
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
-  const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Security features
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
-  const [honeypot, setHoneypot] = useState('')
+  const [honeypot, setHoneypot] = useState("")
   const [lastSubmission, setLastSubmission] = useState<number | null>(null)
   const [submissionCount, setSubmissionCount] = useState(0)
   const [startTime] = useState(Date.now())
-  
+
   // ReCAPTCHA ref - using any to avoid type conflicts
   const recaptchaRef = useRef<any>(null)
 
   // Initialize EmailJS
   useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '1OVn5t4eVwEZf51VK')
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "1OVn5t4eVwEZf51VK")
   }, [])
 
   // Auto-hide message after 10 seconds
@@ -103,59 +121,60 @@ export default function ContactPage() {
   // Security validation functions
   const detectSpam = (text: string): boolean => {
     const lowerText = text.toLowerCase()
-    return spamKeywords.some(keyword => lowerText.includes(keyword))
+    return spamKeywords.some((keyword) => lowerText.includes(keyword))
   }
 
   const validateFormSecurity = (): { isValid: boolean; error?: string } => {
     const now = Date.now()
-    
+
     // 1. Honeypot check (bot detection)
     if (honeypot.trim()) {
-      console.log('🚫 Bot detected: Honeypot filled')
-      return { isValid: false, error: 'Security validation failed. Please try again.' }
+      console.log("🚫 Bot detected: Honeypot filled")
+      return { isValid: false, error: "Security validation failed. Please try again." }
     }
 
     // 2. Rate limiting (1 minute between submissions)
-    if (lastSubmission && (now - lastSubmission < 60000)) {
+    if (lastSubmission && now - lastSubmission < 60000) {
       const remainingTime = Math.ceil((60000 - (now - lastSubmission)) / 1000)
-      return { 
-        isValid: false, 
-        error: `Please wait ${remainingTime} seconds before sending another message.` 
+      return {
+        isValid: false,
+        error: `Please wait ${remainingTime} seconds before sending another message.`,
       }
     }
 
     // 3. Form submission count limit (max 3 per session)
     if (submissionCount >= 3) {
-      return { 
-        isValid: false, 
-        error: 'Maximum submissions reached for this session. Please refresh the page.' 
+      return {
+        isValid: false,
+        error: "Maximum submissions reached for this session. Please refresh the page.",
       }
     }
 
     // 4. Time-based check (form filled too quickly - likely bot)
     const timeTaken = now - startTime
-    if (timeTaken < 10000) { // Less than 10 seconds
-      return { 
-        isValid: false, 
-        error: 'Please take more time to fill out the form properly.' 
+    if (timeTaken < 10000) {
+      // Less than 10 seconds
+      return {
+        isValid: false,
+        error: "Please take more time to fill out the form properly.",
       }
     }
 
     // 5. Spam content detection
     const fullText = `${formData.name} ${formData.email} ${formData.message}`.toLowerCase()
     if (detectSpam(fullText)) {
-      console.log('🚫 Spam content detected')
-      return { 
-        isValid: false, 
-        error: 'Your message contains prohibited content. Please revise and try again.' 
+      console.log("🚫 Spam content detected")
+      return {
+        isValid: false,
+        error: "Your message contains prohibited content. Please revise and try again.",
       }
     }
 
     // 6. CAPTCHA validation
     if (!captchaToken) {
-      return { 
-        isValid: false, 
-        error: 'Please complete the security verification (CAPTCHA).' 
+      return {
+        isValid: false,
+        error: "Please complete the security verification (CAPTCHA).",
       }
     }
 
@@ -163,11 +182,11 @@ export default function ContactPage() {
     const hasRepeatedChars = /(.)\1{4,}/.test(fullText) // 5+ repeated characters
     const hasExcessiveLinks = (fullText.match(/http|www\./g) || []).length > 2
     const hasExcessiveCaps = (fullText.match(/[A-Z]/g) || []).length / fullText.length > 0.5
-    
+
     if (hasRepeatedChars || hasExcessiveLinks || hasExcessiveCaps) {
-      return { 
-        isValid: false, 
-        error: 'Please check your message format and try again.' 
+      return {
+        isValid: false,
+        error: "Please check your message format and try again.",
       }
     }
 
@@ -176,22 +195,22 @@ export default function ContactPage() {
 
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
-      case 'name':
-        if (!value.trim()) return 'Name is required'
-        if (value.trim().length < 2) return 'Name must be at least 2 characters'
-        if (value.trim().length > 50) return 'Name must be less than 50 characters'
-        if (!/^[a-zA-Z\s'-]+$/.test(value.trim())) return 'Name contains invalid characters'
+      case "name":
+        if (!value.trim()) return "Name is required"
+        if (value.trim().length < 2) return "Name must be at least 2 characters"
+        if (value.trim().length > 50) return "Name must be less than 50 characters"
+        if (!/^[a-zA-Z\s'-]+$/.test(value.trim())) return "Name contains invalid characters"
         return undefined
-      case 'email':
-        if (!value.trim()) return 'Email is required'
+      case "email":
+        if (!value.trim()) return "Email is required"
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(value)) return 'Please enter a valid email address'
-        if (value.length > 100) return 'Email address is too long'
+        if (!emailRegex.test(value)) return "Please enter a valid email address"
+        if (value.length > 100) return "Email address is too long"
         return undefined
-      case 'message':
-        if (!value.trim()) return 'Message is required'
-        if (value.trim().length < 10) return 'Message must be at least 10 characters'
-        if (value.trim().length > 1000) return 'Message must be less than 1000 characters'
+      case "message":
+        if (!value.trim()) return "Message is required"
+        if (value.trim().length < 10) return "Message must be at least 10 characters"
+        if (value.trim().length > 1000) return "Message must be less than 1000 characters"
         return undefined
       default:
         return undefined
@@ -199,205 +218,203 @@ export default function ContactPage() {
   }
 
   const handleInputChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
-    
+    setFormData((prev) => ({ ...prev, [name]: value }))
+
     // Clear general errors when user starts typing
     if (errors.general) {
-      setErrors(prev => ({ ...prev, general: undefined }))
+      setErrors((prev) => ({ ...prev, general: undefined }))
     }
-    
+
     // Validate field if it has been touched
     if (touchedFields.has(name)) {
       const error = validateField(name, value)
-      setErrors(prev => ({ ...prev, [name]: error }))
+      setErrors((prev) => ({ ...prev, [name]: error }))
     }
   }
 
   const handleBlur = (name: string) => {
-    setTouchedFields(prev => new Set(prev).add(name))
+    setTouchedFields((prev) => new Set(prev).add(name))
     const error = validateField(name, formData[name as keyof FormData])
-    setErrors(prev => ({ ...prev, [name]: error }))
+    setErrors((prev) => ({ ...prev, [name]: error }))
   }
 
   const handleCaptchaChange = (token: string | null) => {
     setCaptchaToken(token)
     if (token && errors.captcha) {
-      setErrors(prev => ({ ...prev, captcha: undefined }))
+      setErrors((prev) => ({ ...prev, captcha: undefined }))
     }
   }
 
   const isFormValid = () => {
-    const requiredFields = ['name', 'email', 'message']
-    const hasValidFields = requiredFields.every(field => {
+    const requiredFields = ["name", "email", "message"]
+    const hasValidFields = requiredFields.every((field) => {
       const value = formData[field as keyof FormData]
       return value.trim() && !validateField(field, value)
     })
-    
+
     return hasValidFields && captchaToken && !errors.general
   }
 
   // Updated handleSubmit function for your contact form
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setIsSubmitting(true)
-  
-  // Clear any previous errors
-  setErrors({})
-  setMessage(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
 
-  try {
-    // 1. Basic validation first
-    const fieldErrors: FormErrors = {}
-    const requiredFields = ['name', 'email', 'message'] as const
-    
-    requiredFields.forEach(field => {
-      const error = validateField(field, formData[field])
-      if (error) fieldErrors[field] = error
-    })
+    // Clear any previous errors
+    setErrors({})
+    setMessage(null)
 
-    if (Object.keys(fieldErrors).length > 0) {
-      setErrors(fieldErrors)
-      return
-    }
+    try {
+      // 1. Basic validation first
+      const fieldErrors: FormErrors = {}
+      const requiredFields = ["name", "email", "message"] as const
 
-    // 2. Check CAPTCHA token (most common issue)
-    if (!captchaToken) {
-      setErrors({ captcha: 'Please complete the security verification' })
-      setMessage({
-        type: 'error',
-        text: 'Please complete the reCAPTCHA verification before submitting.'
+      requiredFields.forEach((field) => {
+        const error = validateField(field, formData[field])
+        if (error) fieldErrors[field] = error
       })
-      return
-    }
 
-    console.log('CAPTCHA Token:', captchaToken) // Debug log
-
-    // 3. Security validation (but with better error handling)
-    const securityCheck = validateFormSecurity()
-    if (!securityCheck.isValid) {
-      setErrors(prev => ({ ...prev, general: securityCheck.error }))
-      setMessage({
-        type: 'error',
-        text: securityCheck.error || 'Security validation failed'
-      })
-      return
-    }
-
-    // 4. Prepare form data
-    const submitData = {
-      name: formData.name.trim(),
-      email: formData.email.trim(),
-      dimensions: formData.dimensions.trim(),
-      clarity: formData.clarity,
-      shapes: formData.shapes,
-      message: formData.message.trim(),
-      captchaToken: captchaToken,
-      honeypot: honeypot,
-    }
-
-    console.log('Submitting data:', { ...submitData, captchaToken: 'HIDDEN' }) // Debug log
-
-    // 5. Send to API
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(submitData),
-    })
-
-    const result = await response.json()
-    console.log('API Response:', result) // Debug log
-
-    if (response.ok) {
-      setMessage({
-        type: 'success',
-        text: 'Thank you for your inquiry! We will get back to you within 24 hours.'
-      })
-      
-      // Update security tracking
-      setLastSubmission(Date.now())
-      setSubmissionCount(prev => prev + 1)
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        dimensions: '',
-        clarity: '',
-        shapes: '',
-        message: ''
-      })
-      setTouchedFields(new Set())
-      setErrors({})
-      setCaptchaToken(null)
-      setHoneypot('')
-      
-      // Reset CAPTCHA
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset()
+      if (Object.keys(fieldErrors).length > 0) {
+        setErrors(fieldErrors)
+        return
       }
-    } else {
-      throw new Error(result.error || 'Failed to send message')
-    }
-  } catch (error) {
-    console.error('Form submission error:', error)
-    
-    let errorMessage = 'Failed to send message. Please try again later.'
-    
-    if (error instanceof Error) {
-      if (error.message.includes('CAPTCHA') || error.message.includes('verification')) {
-        errorMessage = 'reCAPTCHA verification failed. Please try again.'
-        // Reset CAPTCHA on error
+
+      // 2. Check CAPTCHA token (most common issue)
+      if (!captchaToken) {
+        setErrors({ captcha: "Please complete the security verification" })
+        setMessage({
+          type: "error",
+          text: "Please complete the reCAPTCHA verification before submitting.",
+        })
+        return
+      }
+
+      console.log("CAPTCHA Token:", captchaToken) // Debug log
+
+      // 3. Security validation (but with better error handling)
+      const securityCheck = validateFormSecurity()
+      if (!securityCheck.isValid) {
+        setErrors((prev) => ({ ...prev, general: securityCheck.error }))
+        setMessage({
+          type: "error",
+          text: securityCheck.error || "Security validation failed",
+        })
+        return
+      }
+
+      // 4. Prepare form data
+      const submitData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        dimensions: formData.dimensions.trim(),
+        clarity: formData.clarity,
+        shapes: formData.shapes,
+        message: formData.message.trim(),
+        captchaToken: captchaToken,
+        honeypot: honeypot,
+      }
+
+      console.log("Submitting data:", { ...submitData, captchaToken: "HIDDEN" }) // Debug log
+
+      // 5. Send to API
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      })
+
+      const result = await response.json()
+      console.log("API Response:", result) // Debug log
+
+      if (response.ok) {
+        setMessage({
+          type: "success",
+          text: "Thank you for your inquiry! We will get back to you within 24 hours.",
+        })
+
+        // Update security tracking
+        setLastSubmission(Date.now())
+        setSubmissionCount((prev) => prev + 1)
+
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          dimensions: "",
+          clarity: "",
+          shapes: "",
+          message: "",
+        })
+        setTouchedFields(new Set())
+        setErrors({})
+        setCaptchaToken(null)
+        setHoneypot("")
+
+        // Reset CAPTCHA
         if (recaptchaRef.current) {
           recaptchaRef.current.reset()
         }
-        setCaptchaToken(null)
-      } else if (error.message.includes('network') || error.message.includes('fetch')) {
-        errorMessage = 'Network error. Please check your connection and try again.'
+      } else {
+        throw new Error(result.error || "Failed to send message")
       }
+    } catch (error) {
+      console.error("Form submission error:", error)
+
+      let errorMessage = "Failed to send message. Please try again later."
+
+      if (error instanceof Error) {
+        if (error.message.includes("CAPTCHA") || error.message.includes("verification")) {
+          errorMessage = "reCAPTCHA verification failed. Please try again."
+          // Reset CAPTCHA on error
+          if (recaptchaRef.current) {
+            recaptchaRef.current.reset()
+          }
+          setCaptchaToken(null)
+        } else if (error.message.includes("network") || error.message.includes("fetch")) {
+          errorMessage = "Network error. Please check your connection and try again."
+        }
+      }
+
+      setMessage({
+        type: "error",
+        text: errorMessage,
+      })
+    } finally {
+      setIsSubmitting(false)
     }
-    
-    setMessage({
-      type: 'error',
-      text: errorMessage
-    })
-  } finally {
-    setIsSubmitting(false)
   }
-}
 
   return (
     <div className="min-h-screen bg-black">
       <Header />
-      
+
       {/* Fixed Header Spacing */}
       <div className="h-20" />
-      
+
       {/* Hero Section with Enhanced Background */}
       <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center opacity-15"
-          style={{ backgroundImage: 'url(/shop3.jpg)' }}
+          style={{ backgroundImage: "url(/shop3.jpg)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/80" />
-        
+
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-600/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
-        
+
         <div className="relative z-10 container mx-auto px-4 text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-600/20 text-green-400 text-sm font-medium mb-6">
             <MessageCircle className="h-4 w-4 mr-2" />
             Get In Touch Today
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white font-playfair mb-6">
-            Contact Us
-          </h1>
+          <h1 className="text-5xl md:text-6xl font-bold text-white font-playfair mb-6">Contact Us</h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Ready to discover premium Tsavorite gemstones? Connect with our experts for personalized consultations, 
+            Ready to discover premium Tsavorite gemstones? Connect with our experts for personalized consultations,
             custom orders, and professional gemstone services.
           </p>
         </div>
@@ -425,20 +442,20 @@ const handleSubmit = async (e: React.FormEvent) => {
                     name="website"
                     value={honeypot}
                     onChange={(e) => setHoneypot(e.target.value)}
-                    style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                    style={{ position: "absolute", left: "-9999px", opacity: 0, pointerEvents: "none" }}
                     tabIndex={-1}
                     autoComplete="off"
                   />
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Input
                         placeholder="Your Full Name *"
                         value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        onBlur={() => handleBlur('name')}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
+                        onBlur={() => handleBlur("name")}
                         className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
-                          errors.name ? 'border-red-500 ring-red-500' : ''
+                          errors.name ? "border-red-500 ring-red-500" : ""
                         }`}
                         maxLength={50}
                       />
@@ -454,10 +471,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                         type="email"
                         placeholder="Your Email Address *"
                         value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        onBlur={() => handleBlur('email')}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        onBlur={() => handleBlur("email")}
                         className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
-                          errors.email ? 'border-red-500 ring-red-500' : ''
+                          errors.email ? "border-red-500 ring-red-500" : ""
                         }`}
                         maxLength={100}
                       />
@@ -474,7 +491,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <Input
                       placeholder="Preferred Dimensions (mm) - Optional"
                       value={formData.dimensions}
-                      onChange={(e) => handleInputChange('dimensions', e.target.value)}
+                      onChange={(e) => handleInputChange("dimensions", e.target.value)}
                       className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12 focus:ring-2 focus:ring-green-500 transition-all duration-200"
                       maxLength={50}
                     />
@@ -482,7 +499,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Select value={formData.clarity} onValueChange={(value) => handleInputChange('clarity', value)}>
+                      <Select value={formData.clarity} onValueChange={(value) => handleInputChange("clarity", value)}>
                         <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-12 focus:ring-2 focus:ring-green-500">
                           <SelectValue placeholder="Select Clarity Grade" />
                         </SelectTrigger>
@@ -496,7 +513,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       </Select>
                     </div>
                     <div>
-                      <Select value={formData.shapes} onValueChange={(value) => handleInputChange('shapes', value)}>
+                      <Select value={formData.shapes} onValueChange={(value) => handleInputChange("shapes", value)}>
                         <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-12 focus:ring-2 focus:ring-green-500">
                           <SelectValue placeholder="Select Preferred Shape" />
                         </SelectTrigger>
@@ -516,10 +533,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                       placeholder="Tell us about your requirements, budget, or any specific questions *"
                       rows={6}
                       value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      onBlur={() => handleBlur('message')}
+                      onChange={(e) => handleInputChange("message", e.target.value)}
+                      onBlur={() => handleBlur("message")}
                       className={`bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 transition-all duration-200 ${
-                        errors.message ? 'border-red-500 ring-red-500' : ''
+                        errors.message ? "border-red-500 ring-red-500" : ""
                       }`}
                       maxLength={1000}
                     />
@@ -560,8 +577,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </div>
                   )}
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={!isFormValid() || isSubmitting}
                     className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed h-12 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
@@ -578,18 +595,22 @@ const handleSubmit = async (e: React.FormEvent) => {
                       </div>
                     )}
                   </Button>
-                  
+
                   {/* Enhanced Message Display */}
                   {message && (
-                    <div className={`mt-4 p-4 rounded-lg text-sm border-l-4 ${
-                      message.type === 'success' 
-                        ? 'bg-green-900/20 text-green-300 border-green-500 border-l-green-500' 
-                        : 'bg-red-900/20 text-red-300 border-red-500 border-l-red-500'
-                    }`}>
+                    <div
+                      className={`mt-4 p-4 rounded-lg text-sm border-l-4 ${
+                        message.type === "success"
+                          ? "bg-green-900/20 text-green-300 border-green-500 border-l-green-500"
+                          : "bg-red-900/20 text-red-300 border-red-500 border-l-red-500"
+                      }`}
+                    >
                       <div className="flex items-center">
-                        <div className={`w-2 h-2 rounded-full mr-3 ${
-                          message.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-                        }`} />
+                        <div
+                          className={`w-2 h-2 rounded-full mr-3 ${
+                            message.type === "success" ? "bg-green-500" : "bg-red-500"
+                          }`}
+                        />
                         <span className="font-medium">{message.text}</span>
                       </div>
                     </div>
@@ -623,8 +644,12 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-2">Phone Numbers</h3>
-                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">+254 799 445 800</p>
-                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">+254 769 411 649</p>
+                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">
+                        +254 799 445 800
+                      </p>
+                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">
+                        +254 769 411 649
+                      </p>
                       <p className="text-gray-500 text-sm mt-1">Available 8:00 AM - 10:00 PM EAT</p>
                     </div>
                   </div>
@@ -635,7 +660,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-2">Email Address</h3>
-                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">barakaminingmi4@gmail.com</p>
+                      <p className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer">
+                        barakaminingmi4@gmail.com
+                      </p>
                       <p className="text-gray-500 text-sm mt-1">We respond within 24 hours</p>
                     </div>
                   </div>
@@ -647,7 +674,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <div>
                       <h3 className="text-white font-semibold mb-2">Our Location</h3>
                       <p className="text-gray-300">
-                        Baraka Mining & Minerals Ltd<br />
+                        Baraka Mining & Minerals Ltd
+                        <br />
                         Voi, Taita Taveta, Kenya
                       </p>
                       <p className="text-gray-500 text-sm mt-1">Visit by appointment only</p>
