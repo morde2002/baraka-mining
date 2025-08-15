@@ -538,7 +538,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <div className="flex justify-center">
                     <ReCAPTCHAComponent
                       ref={recaptchaRef}
-                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LezT6QrAAAAAEGgmvn0zlvcudySMysFId2rC2wS"} // Test key
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY} // Test key
                       onChange={handleCaptchaChange}
                       theme="dark"
                     />
