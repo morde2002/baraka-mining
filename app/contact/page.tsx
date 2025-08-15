@@ -236,97 +236,136 @@ export default function ContactPage() {
     return hasValidFields && captchaToken && !errors.general
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  // Updated handleSubmit function for your contact form
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+  
+  // Clear any previous errors
+  setErrors({})
+  setMessage(null)
 
-    try {
-      // Security validation
-      const securityCheck = validateFormSecurity()
-      if (!securityCheck.isValid) {
-        setErrors(prev => ({ ...prev, general: securityCheck.error }))
-        setMessage({
-          type: 'error',
-          text: securityCheck.error || 'Security validation failed'
-        })
-        return
-      }
+  try {
+    // 1. Basic validation first
+    const fieldErrors: FormErrors = {}
+    const requiredFields = ['name', 'email', 'message'] as const
+    
+    requiredFields.forEach(field => {
+      const error = validateField(field, formData[field])
+      if (error) fieldErrors[field] = error
+    })
 
-      // Validate all required fields
-      const fieldErrors: FormErrors = {}
-      const requiredFields = ['name', 'email', 'message'] as const
-      
-      requiredFields.forEach(field => {
-        const error = validateField(field, formData[field])
-        if (error) fieldErrors[field] = error
+    if (Object.keys(fieldErrors).length > 0) {
+      setErrors(fieldErrors)
+      return
+    }
+
+    // 2. Check CAPTCHA token (most common issue)
+    if (!captchaToken) {
+      setErrors({ captcha: 'Please complete the security verification' })
+      setMessage({
+        type: 'error',
+        text: 'Please complete the reCAPTCHA verification before submitting.'
       })
+      return
+    }
 
-      if (Object.keys(fieldErrors).length > 0) {
-        setErrors(fieldErrors)
-        return
+    console.log('CAPTCHA Token:', captchaToken) // Debug log
+
+    // 3. Security validation (but with better error handling)
+    const securityCheck = validateFormSecurity()
+    if (!securityCheck.isValid) {
+      setErrors(prev => ({ ...prev, general: securityCheck.error }))
+      setMessage({
+        type: 'error',
+        text: securityCheck.error || 'Security validation failed'
+      })
+      return
+    }
+
+    // 4. Prepare form data
+    const submitData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      dimensions: formData.dimensions.trim(),
+      clarity: formData.clarity,
+      shapes: formData.shapes,
+      message: formData.message.trim(),
+      captchaToken: captchaToken,
+      honeypot: honeypot,
+    }
+
+    console.log('Submitting data:', { ...submitData, captchaToken: 'HIDDEN' }) // Debug log
+
+    // 5. Send to API
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(submitData),
+    })
+
+    const result = await response.json()
+    console.log('API Response:', result) // Debug log
+
+    if (response.ok) {
+      setMessage({
+        type: 'success',
+        text: 'Thank you for your inquiry! We will get back to you within 24 hours.'
+      })
+      
+      // Update security tracking
+      setLastSubmission(Date.now())
+      setSubmissionCount(prev => prev + 1)
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        dimensions: '',
+        clarity: '',
+        shapes: '',
+        message: ''
+      })
+      setTouchedFields(new Set())
+      setErrors({})
+      setCaptchaToken(null)
+      setHoneypot('')
+      
+      // Reset CAPTCHA
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset()
       }
-
-      // Prepare template parameters for EmailJS
-      const templateParams = {
-        from_name: formData.name.trim(),
-        from_email: formData.email.trim(),
-        to_name: 'Baraka Mining Team',
-        message: formData.message.trim(),
-        dimensions: formData.dimensions.trim() || 'Not specified',
-        clarity: formData.clarity || 'Not specified',
-        shapes: formData.shapes || 'Not specified',
-        timestamp: new Date().toLocaleString(),
-        security_token: captchaToken?.substring(0, 10) + '...', // Partial token for verification
-      }
-
-      // Send email using EmailJS
-      const response = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_74555i8',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_wetrxq9',
-        templateParams
-      )
-
-      if (response.status === 200) {
-        setMessage({
-          type: 'success',
-          text: 'Thank you for your inquiry! We will get back to you within 24 hours.'
-        })
-        
-        // Update security tracking
-        setLastSubmission(Date.now())
-        setSubmissionCount(prev => prev + 1)
-        
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          dimensions: '',
-          clarity: '',
-          shapes: '',
-          message: ''
-        })
-        setTouchedFields(new Set())
-        setErrors({})
-        setCaptchaToken(null)
-        setHoneypot('')
-        
-        // Reset CAPTCHA
+    } else {
+      throw new Error(result.error || 'Failed to send message')
+    }
+  } catch (error) {
+    console.error('Form submission error:', error)
+    
+    let errorMessage = 'Failed to send message. Please try again later.'
+    
+    if (error instanceof Error) {
+      if (error.message.includes('CAPTCHA') || error.message.includes('verification')) {
+        errorMessage = 'reCAPTCHA verification failed. Please try again.'
+        // Reset CAPTCHA on error
         if (recaptchaRef.current) {
           recaptchaRef.current.reset()
         }
-      } else {
-        throw new Error('Failed to send email')
+        setCaptchaToken(null)
+      } else if (error.message.includes('network') || error.message.includes('fetch')) {
+        errorMessage = 'Network error. Please check your connection and try again.'
       }
-    } catch (error) {
-      console.error('EmailJS Error:', error)
-      setMessage({
-        type: 'error',
-        text: 'Failed to send message. Please try again later or contact us directly.'
-      })
-    } finally {
-      setIsSubmitting(false)
     }
+    
+    setMessage({
+      type: 'error',
+      text: errorMessage
+    })
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="min-h-screen bg-black">
