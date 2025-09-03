@@ -104,7 +104,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm text-center md:text-left">
-              © 2024 Baraka Mining & Minerals Ltd. All Rights Reserved
+              © 2025 Baraka Mining & Minerals Ltd. All Rights Reserved
             </p>
             <p className="text-gray-400 text-sm">
               Crafted by <a 
@@ -113,7 +113,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-green-400 hover:text-green-300 transition-colors"
               >
-                XeleratedTech.com
+                Xelerated Tech
               </a>
             </p>
           </div>
