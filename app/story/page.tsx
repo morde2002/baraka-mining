@@ -3,7 +3,7 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Crown, Heart, Mountain, Users, Award, Star } from 'lucide-react'
+import { Crown, Heart, Mountain, Users, Award, Star, Trophy, Medal } from 'lucide-react'
 
 const storyParts = [
   {
@@ -46,9 +46,27 @@ With not enough workforce, Mama Wanjiru was forced to fetch water and cook for h
 
 const legacyStats = [
   { number: "85+", label: "Years of Legacy", icon: Star },
-  { number: "3", label: "Generations", icon: Users },
+  { number: "2", label: "Generations", icon: Users },
   { number: "1st", label: "Woman Miner in Kenya", icon: Crown },
   { number: "1000+", label: "Lives Impacted", icon: Heart }
+]
+
+const achievements = [
+  {
+    title: "Pioneering Woman Miner",
+    description: "Elizabeth Wanjiru became the first woman to own and operate a mining company in Kenya, breaking gender barriers in a male-dominated industry.",
+    icon: Crown
+  },
+  {
+    title: "Industry Leadership",
+    description: "Baraka Mining has been recognized for its leadership in ethical mining practices and community empowerment.",
+    icon: Trophy
+  },
+  {
+    title: "Sustainability Champion",
+    description: "Awarded for commitment to sustainable mining and environmental stewardship, setting new standards in the industry.",
+    icon: Medal
+  }
 ]
 
 export default function StoryPage() {
@@ -112,6 +130,175 @@ export default function StoryPage() {
                   </div>
                 )
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* Recognition & Awards Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-800 via-gray-900 to-black relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-16 left-16 w-80 h-80 bg-yellow-600/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-16 right-16 w-80 h-80 bg-green-600/10 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-yellow-500/8 rounded-full blur-2xl animate-pulse delay-500" />
+          </div>
+          
+          <div className="relative z-10 container mx-auto px-4">
+            <div className="text-center mb-16">
+              <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-400 border-yellow-600/30 mb-6 text-lg font-medium px-6 py-3">
+                <Award className="h-5 w-5 mr-2" />
+                Recognition & Awards
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-6 leading-tight">
+                Celebrating Excellence
+              </h2>
+              <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                Our commitment to quality, sustainability, and innovation has earned recognition 
+                from industry leaders and international organizations.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
+              {/* Award Images */}
+              <div className="space-y-8">
+                {/* Trophy Image */}
+                <Card className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-102 transition-all duration-500 shadow-2xl hover:shadow-3xl hover:border-yellow-600/50">
+                  <CardContent className="p-0 relative">
+                    <div className="relative overflow-hidden aspect-[4/3]">
+                      <img
+                        src="/reward.jpg"
+                        alt="Award Trophy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      
+                      {/* Golden glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/20 via-transparent to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <div className="bg-black/70 backdrop-blur-sm rounded-lg p-4 border border-yellow-400/20">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Trophy className="h-5 w-5 text-yellow-400" />
+                            <span className="text-yellow-400 text-sm font-semibold">Industry Recognition</span>
+                          </div>
+                          <h3 className="text-white font-bold text-lg mb-1">Excellence in Mining</h3>
+                          <p className="text-gray-300 text-sm">Symbol of our commitment to quality and innovation</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Award Winner Image */}
+                <Card className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-102 transition-all duration-500 shadow-2xl hover:shadow-3xl hover:border-green-600/50">
+                  <CardContent className="p-0 relative">
+                    <div className="relative overflow-hidden aspect-[4/3]">
+                      <img
+                        src="/female-award-winner.jpg"
+                        alt="CEO receiving award"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      
+                      {/* Green glow effect for legacy */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-transparent to-green-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <div className="bg-black/70 backdrop-blur-sm rounded-lg p-4 border border-green-400/20">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Crown className="h-5 w-5 text-green-400" />
+                            <span className="text-green-400 text-sm font-semibold">Legacy Continues</span>
+                          </div>
+                          <h3 className="text-white font-bold text-lg mb-1">Next Generation Leadership</h3>
+                          <p className="text-gray-300 text-sm">Mr and Mrs Kilio carrying forward the vision</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Achievements List */}
+              <div className="space-y-6">
+                <div className="mb-8">
+                  <h3 className="text-3xl font-bold text-white font-playfair mb-4">
+                    Awards & Recognition
+                  </h3>
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    From Elizabeth Wanjiru's pioneering achievements to today's continued excellence, 
+                    the Baraka Mining legacy has been recognized across multiple domains.
+                  </p>
+                </div>
+
+                {achievements.map((achievement, index) => {
+                  const Icon = achievement.icon
+                  return (
+                    <Card key={index} className="bg-gray-800 border-gray-700 hover:border-yellow-600/50 transition-all duration-300 group">
+                      <CardContent className="p-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="p-3 bg-gradient-to-br from-yellow-600/20 to-yellow-500/20 rounded-xl group-hover:from-yellow-600/30 group-hover:to-yellow-500/30 transition-all duration-300">
+                            <Icon className="h-6 w-6 text-yellow-400" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-lg font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors duration-300">
+                              {achievement.title}
+                            </h4>
+                            <p className="text-gray-300 leading-relaxed">
+                              {achievement.description}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+
+                {/* Quote Section */}
+                <Card className="bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 shadow-xl">
+                  <CardContent className="p-8">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-4">
+                        <div className="p-3 bg-green-600/20 rounded-full">
+                          <Users className="h-6 w-6 text-green-400" />
+                        </div>
+                      </div>
+                      <blockquote className="text-gray-300 text-lg italic mb-4 leading-relaxed">
+                        "These awards represent not just our achievements, but the dedication of three generations 
+                        committed to excellence, sustainability, and honoring our founder's vision."
+                      </blockquote>
+                      <div className="text-green-400 font-semibold">
+                        - The Baraka Mining Family
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Recognition Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-yellow-600/50 transition-all duration-300 group">
+                <Trophy className="h-8 w-8 text-yellow-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                <div className="text-2xl font-bold text-white mb-1">15+</div>
+                <div className="text-gray-400 text-sm">Industry Awards</div>
+              </div>
+              
+              <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <Crown className="h-8 w-8 text-green-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                <div className="text-2xl font-bold text-white mb-1">1st</div>
+                <div className="text-gray-400 text-sm">Woman Mining Pioneer</div>
+              </div>
+              
+              <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-yellow-600/50 transition-all duration-300 group">
+                <Medal className="h-8 w-8 text-yellow-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                <div className="text-2xl font-bold text-white mb-1">5+</div>
+                <div className="text-gray-400 text-sm">Sustainability Certifications</div>
+              </div>
+              
+              <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <Star className="h-8 w-8 text-green-400 mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
+                <div className="text-2xl font-bold text-white mb-1">85+</div>
+                <div className="text-gray-400 text-sm">Years of Excellence</div>
+              </div>
             </div>
           </div>
         </section>

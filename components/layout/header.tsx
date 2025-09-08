@@ -54,13 +54,15 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`text-white hover:text-green-400 transition-all duration-300 relative font-medium ${
-                    pathname === item.href ? 'text-green-400' : ''
+                  className={`text-white hover:text-green-400 transition-all duration-300 relative font-medium px-3 py-2 rounded-md ${
+                    (pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))) 
+                      ? 'text-green-400 bg-green-600/20 font-bold' 
+                      : ''
                   }`}
                 >
                   {item.name}
-                  {pathname === item.href && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-400 rounded-full" />
+                  {(pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))) && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-1 bg-green-400 rounded-full shadow-lg shadow-green-400/50" />
                   )}
                   <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-400 rounded-full scale-x-0 hover:scale-x-100 transition-transform duration-300" />
                 </Link>
@@ -100,8 +102,10 @@ export default function Header() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`text-lg hover:text-green-400 transition-colors font-medium ${
-                        pathname === item.href ? 'text-green-400' : ''
+                      className={`text-lg hover:text-green-400 transition-colors font-medium px-4 py-2 rounded-md ${
+                        (pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href)))
+                          ? 'text-green-400 bg-green-600/20 font-bold' 
+                          : ''
                       }`}
                     >
                       {item.name}

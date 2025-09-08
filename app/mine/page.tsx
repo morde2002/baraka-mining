@@ -7,7 +7,7 @@ import Footer from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, Camera, Mountain, Users, Shield } from 'lucide-react'
+import { Loader2, Camera, Mountain, Users, Shield, ShoppingBag, Store, ArrowRight, Gem, MapPin } from 'lucide-react'
 
 // Reversed order - newest images first (37 down to 19)
 const initialImages = [
@@ -83,6 +83,13 @@ const processSteps = [
     icon: Camera,
     details: ["Gemological testing", "Certification", "Documentation", "Final inspection"]
   }
+]
+
+const shopImages = [
+  { src: "/shop1.jpg", title: "Gemstone Display", description: "Premium Tsavorite collection showcase" },
+  { src: "/shop2.jpg", title: "Customer Experience", description: "Personalized gemstone consultation" },
+  { src: "/shop3.jpg", title: "Expert Selection", description: "Hand-picked quality gemstones" },
+  { src: "/shop4.jpg", title: "Baraka Mining Shop", description: "Our flagship retail location" }
 ]
 
 export default function MinePage() {
@@ -291,6 +298,154 @@ export default function MinePage() {
                   </Card>
                 )
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* Baraka Mining Shop Section */}
+        <section className="py-20 bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-10 right-20 w-80 h-80 bg-green-600/8 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-10 left-20 w-80 h-80 bg-green-400/8 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/5 rounded-full blur-2xl animate-pulse delay-500" />
+          </div>
+          
+          <div className="relative z-10 container mx-auto px-4">
+            <div className="text-center mb-16">
+              <Badge variant="secondary" className="bg-green-600/20 text-green-400 border-green-600/30 mb-6 text-lg font-medium px-6 py-3">
+                <Store className="h-5 w-5 mr-2" />
+                Visit Our Shop
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-6 leading-tight">
+                Baraka Mining Shop
+              </h2>
+              <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                Experience the beauty of our hand-selected Tsavorite gemstones in person. 
+                Our flagship shop offers an intimate setting to explore and purchase premium gems 
+                directly from the source.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400">
+                <div className="flex items-center">
+                  <MapPin className="h-5 w-5 text-green-400 mr-2" />
+                  <span>Taita Taveta, Kenya</span>
+                </div>
+                <div className="flex items-center">
+                  <Gem className="h-5 w-5 text-green-400 mr-2" />
+                  <span>Direct from Mine to You</span>
+                </div>
+                <div className="flex items-center">
+                  <ShoppingBag className="h-5 w-5 text-green-400 mr-2" />
+                  <span>Expert Consultation Available</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Shop Gallery */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {shopImages.map((image, index) => (
+                <Card 
+                  key={index} 
+                  className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-105 transition-all duration-500 shadow-xl hover:shadow-2xl hover:border-green-600/50 cursor-pointer"
+                >
+                  <CardContent className="p-0 relative">
+                    <div className="relative overflow-hidden aspect-[4/5]">
+                      <img
+                        src={image.src || "/placeholder.svg"}
+                        alt={image.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                                            
+                      <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 className="text-white text-lg font-bold mb-2 font-playfair">
+                          {image.title}
+                        </h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">
+                          {image.description}
+                        </p>
+                      </div>
+                      
+                      {/* Hover overlay icon */}
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-10 h-10 bg-green-600/90 rounded-full flex items-center justify-center backdrop-blur-sm">
+                          <Store className="h-5 w-5 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Shop Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Gem className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Premium Selection</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Browse our carefully curated collection of the finest Tsavorite gemstones, 
+                    each piece personally selected for its exceptional quality and beauty.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Store className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Expert Guidance</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Our knowledgeable staff provides personalized consultation to help you 
+                    find the perfect gemstone for your needs and preferences.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <ShoppingBag className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Direct Purchase</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Buy directly from the source with guaranteed authenticity and quality. 
+                    Every purchase comes with certification and our family's guarantee.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center">
+              <Card className="bg-gradient-to-r from-gray-800 to-gray-700 border-gray-600 shadow-2xl inline-block">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold text-white mb-4 font-playfair">
+                    Experience Our Gemstones in Person
+                  </h3>
+                  <p className="text-gray-300 mb-6 max-w-md">
+                    Visit our shop to see the brilliance and beauty of our Tsavorite gemstones up close.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="mailto:barakaminingmi4@gmail.com?subject=Shop Visit Inquiry" className="inline-block">
+                      <Button className="bg-green-600 hover:bg-green-700 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group">
+                        Visit Our Shop
+                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
+                    </a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Voi,+Taita+Taveta,+Kenya" target="_blank" rel="noopener noreferrer" className="inline-block">
+                      <Button variant="outline" className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300">
+                        <MapPin className="mr-2 h-5 w-5" />
+                        Get Directions
+                      </Button>
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
