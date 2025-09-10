@@ -107,7 +107,7 @@ export default function StoryPage() {
                 "The Queen of Green," who defied all odds to build Kenya's first woman-owned mining empire.
               </p>
               <p className="text-lg text-gray-400">
-                From a small village in 1935 to founding a gemstone dynasty that spans three generations, 
+                From a small village in 1935 to founding a gemstone dynasty that spans two generations, 
                 this is the story of courage, determination, and the pursuit of excellence.
               </p>
             </div>
@@ -208,7 +208,7 @@ export default function StoryPage() {
                             <Crown className="h-5 w-5 text-green-400" />
                             <span className="text-green-400 text-sm font-semibold">Legacy Continues</span>
                           </div>
-                          <h3 className="text-white font-bold text-lg mb-1">Next Generation Leadership</h3>
+                          <h3 className="text-white font-bold text-lg mb-1">Second Generation Leadership</h3>
                           <p className="text-gray-300 text-sm">Mr and Mrs Kilio carrying forward the vision</p>
                         </div>
                       </div>
@@ -262,7 +262,7 @@ export default function StoryPage() {
                         </div>
                       </div>
                       <blockquote className="text-gray-300 text-lg italic mb-4 leading-relaxed">
-                        "These awards represent not just our achievements, but the dedication of three generations 
+                        "These awards represent not just our achievements, but the dedication of two generations 
                         committed to excellence, sustainability, and honoring our founder's vision."
                       </blockquote>
                       <div className="text-green-400 font-semibold">
@@ -413,7 +413,7 @@ export default function StoryPage() {
                   </Badge>
                   
                   <h2 className="text-3xl md:text-5xl font-bold text-white font-playfair leading-tight">
-                    Three Generations of Excellence
+                    Two Generations of Excellence
                   </h2>
                   
                   <div className="max-w-4xl mx-auto space-y-6">

@@ -7,7 +7,7 @@ import Footer from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, Camera, Mountain, Users, Shield, ShoppingBag, Store, ArrowRight, Gem, MapPin } from 'lucide-react'
+import { Loader2, Camera, Mountain, Users, Shield, ShoppingBag, Store, ArrowRight, Gem, MapPin, Award, Globe, Calendar, Handshake } from 'lucide-react'
 
 // Reversed order - newest images first (37 down to 19)
 const initialImages = [
@@ -85,11 +85,11 @@ const processSteps = [
   }
 ]
 
-const shopImages = [
-  { src: "/shop1.jpg", title: "Gemstone Display", description: "Premium Tsavorite collection showcase" },
-  { src: "/shop2.jpg", title: "Customer Experience", description: "Personalized gemstone consultation" },
-  { src: "/shop3.jpg", title: "Expert Selection", description: "Hand-picked quality gemstones" },
-  { src: "/shop4.jpg", title: "Baraka Mining Shop", description: "Our flagship retail location" }
+const fairImages = [
+  { src: "/shop1.jpg", title: "Exhibition Booth Setup", description: "Baraka Mining's professional booth display featuring our company branding" },
+  { src: "/shop2.jpg", title: "Gemstone Display Cases", description: "Secure display cases showcasing our Tsavorite gemstone collection" },
+  { src: "/shop3.jpg", title: "Premium Tsavorite Collection", description: "Carefully arranged Tsavorite gemstones in professional display containers" },
+  { src: "/shop4.jpg", title: "Booth Overview", description: "Complete view of our exhibition space at the Bangkok Gem & Jewellery Fair" }
 ]
 
 export default function MinePage() {
@@ -144,7 +144,7 @@ export default function MinePage() {
               THE MINE
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-              Journey deep into the heart of Taita Taveta, Kenya, where three generations of expertise 
+              Journey deep into the heart of Taita Taveta, Kenya, where two generations of expertise 
               have perfected the art of extracting the world's most coveted Tsavorite gemstones.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-400">
@@ -194,7 +194,7 @@ export default function MinePage() {
                       {/* Holiday Badge */}
                       {image.isHoliday && (
                         <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
-                          🏖️ Holiday
+                          Holiday
                         </div>
                       )}
                       
@@ -206,7 +206,6 @@ export default function MinePage() {
                           {image.isHoliday ? "Well-deserved break time" : "Taita Taveta, Kenya"}
                         </p>
                       </div>
-
                     </div>
                   </CardContent>
                 </Card>
@@ -256,7 +255,7 @@ export default function MinePage() {
               </h2>
               <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 From exploration to extraction, we follow sustainable and ethical mining practices 
-                refined over three generations of expertise.
+                refined over two generations of expertise.
               </p>
             </div>
 
@@ -302,7 +301,7 @@ export default function MinePage() {
           </div>
         </section>
 
-        {/* Baraka Mining Shop Section */}
+        {/* 71st Bangkok Gem & Jewellery Fair Section */}
         <section className="py-20 bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
           <div className="absolute inset-0">
             <div className="absolute top-10 right-20 w-80 h-80 bg-green-600/8 rounded-full blur-3xl animate-pulse" />
@@ -313,37 +312,37 @@ export default function MinePage() {
           <div className="relative z-10 container mx-auto px-4">
             <div className="text-center mb-16">
               <Badge variant="secondary" className="bg-green-600/20 text-green-400 border-green-600/30 mb-6 text-lg font-medium px-6 py-3">
-                <Store className="h-5 w-5 mr-2" />
-                Visit Our Shop
+                <Award className="h-5 w-5 mr-2" />
+                International Trade Fair
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold text-white font-playfair mb-6 leading-tight">
-                Baraka Mining Shop
+                71st Bangkok Gem & Jewellery Fair
               </h2>
               <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-                Experience the beauty of our hand-selected Tsavorite gemstones in person. 
-                Our flagship shop offers an intimate setting to explore and purchase premium gems 
-                directly from the source.
+                <span className="text-green-400 font-semibold">February 22-26, 2025</span> - We proudly participated in one of 
+                the world's most prestigious and longest-running international trade shows in the gem and jewelry industry, 
+                held at the Queen Sirikit National Convention Center in Bangkok, Thailand.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400">
                 <div className="flex items-center">
-                  <MapPin className="h-5 w-5 text-green-400 mr-2" />
-                  <span>Taita Taveta, Kenya</span>
+                  <Calendar className="h-5 w-5 text-green-400 mr-2" />
+                  <span>February 22-26, 2025</span>
                 </div>
                 <div className="flex items-center">
-                  <Gem className="h-5 w-5 text-green-400 mr-2" />
-                  <span>Direct from Mine to You</span>
+                  <Globe className="h-5 w-5 text-green-400 mr-2" />
+                  <span>Bangkok, Thailand</span>
                 </div>
                 <div className="flex items-center">
-                  <ShoppingBag className="h-5 w-5 text-green-400 mr-2" />
-                  <span>Expert Consultation Available</span>
+                  <Handshake className="h-5 w-5 text-green-400 mr-2" />
+                  <span>Global Trade Platform</span>
                 </div>
               </div>
             </div>
 
-            {/* Shop Gallery */}
+            {/* Fair Gallery */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {shopImages.map((image, index) => (
+              {fairImages.map((image, index) => (
                 <Card 
                   key={index} 
                   className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-105 transition-all duration-500 shadow-xl hover:shadow-2xl hover:border-green-600/50 cursor-pointer"
@@ -369,7 +368,7 @@ export default function MinePage() {
                       {/* Hover overlay icon */}
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="w-10 h-10 bg-green-600/90 rounded-full flex items-center justify-center backdrop-blur-sm">
-                          <Store className="h-5 w-5 text-white" />
+                          <Award className="h-5 w-5 text-white" />
                         </div>
                       </div>
                     </div>
@@ -378,17 +377,32 @@ export default function MinePage() {
               ))}
             </div>
 
-            {/* Shop Features */}
+            {/* Fair Highlights */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Globe className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Global Reach</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Connected with international buyers, dealers, and industry professionals from over 
+                    <span className="text-green-400 font-semibold"> 20 countries</span>, expanding our global network 
+                    and showcasing Kenya's premium Tsavorite gemstones.
+                  </p>
+                </CardContent>
+              </Card>
+
               <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
                 <CardContent className="p-8 text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                     <Gem className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Premium Selection</h3>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Premium Showcase</h3>
                   <p className="text-gray-300 leading-relaxed">
-                    Browse our carefully curated collection of the finest Tsavorite gemstones, 
-                    each piece personally selected for its exceptional quality and beauty.
+                    Displayed our finest collection of ethically-sourced Tsavorite gemstones, 
+                    demonstrating the exceptional quality and craftsmanship that defines 
+                    Baraka Mining's two-generation legacy.
                   </p>
                 </CardContent>
               </Card>
@@ -396,28 +410,48 @@ export default function MinePage() {
               <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
                 <CardContent className="p-8 text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Store className="h-8 w-8 text-white" />
+                    <Handshake className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Expert Guidance</h3>
+                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Strategic Partnerships</h3>
                   <p className="text-gray-300 leading-relaxed">
-                    Our knowledgeable staff provides personalized consultation to help you 
-                    find the perfect gemstone for your needs and preferences.
+                    Established valuable business relationships and explored new market opportunities, 
+                    reinforcing our position as a trusted supplier of authentic Kenyan Tsavorite 
+                    in the international gemstone market.
                   </p>
                 </CardContent>
               </Card>
+            </div>
 
-              <Card className="bg-gray-800 border-gray-700 hover:border-green-600/50 transition-all duration-300 group">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <ShoppingBag className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-4 font-playfair">Direct Purchase</h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Buy directly from the source with guaranteed authenticity and quality. 
-                    Every purchase comes with certification and our family's guarantee.
-                  </p>
-                </CardContent>
-              </Card>
+            {/* Fair Impact Stats */}
+            <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-2xl p-8 mb-12">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-4 font-playfair">
+                  Fair Impact & Recognition
+                </h3>
+                <p className="text-gray-300 max-w-2xl mx-auto">
+                  The Bangkok Gem & Jewellery Fair continues to be a cornerstone event for the global 
+                  gem and jewelry industry, bringing together key players from across the supply chain.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">1,100+</div>
+                  <div className="text-gray-400 text-sm">Exhibitors</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">2,500+</div>
+                  <div className="text-gray-400 text-sm">Exhibition Booths</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">20+</div>
+                  <div className="text-gray-400 text-sm">Countries</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">5</div>
+                  <div className="text-gray-400 text-sm">Days</div>
+                </div>
+              </div>
             </div>
 
             {/* Call to Action */}
@@ -425,22 +459,23 @@ export default function MinePage() {
               <Card className="bg-gradient-to-r from-gray-800 to-gray-700 border-gray-600 shadow-2xl inline-block">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold text-white mb-4 font-playfair">
-                    Experience Our Gemstones in Person
+                    Experience Our Global Presence
                   </h3>
                   <p className="text-gray-300 mb-6 max-w-md">
-                    Visit our shop to see the brilliance and beauty of our Tsavorite gemstones up close.
+                    Our participation in international trade fairs demonstrates our commitment to 
+                    connecting Kenyan Tsavorite with the world.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="mailto:barakaminingmi4@gmail.com?subject=Shop Visit Inquiry" className="inline-block">
+                    <a href="mailto:barakaminingmi4@gmail.com?subject=International Trade Inquiry" className="inline-block">
                       <Button className="bg-green-600 hover:bg-green-700 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group">
-                        Visit Our Shop
+                        Connect with Us
                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                       </Button>
                     </a>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Voi,+Taita+Taveta,+Kenya" target="_blank" rel="noopener noreferrer" className="inline-block">
+                    <a href="https://www.bkkgems.com/" target="_blank" rel="noopener noreferrer" className="inline-block">
                       <Button variant="outline" className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300">
-                        <MapPin className="mr-2 h-5 w-5" />
-                        Get Directions
+                        <Globe className="mr-2 h-5 w-5" />
+                        Learn About BGJF
                       </Button>
                     </a>
                   </div>
@@ -455,7 +490,7 @@ export default function MinePage() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-green-500">60+</div>
+                <div className="text-3xl font-bold text-green-500">85+</div>
                 <div className="text-gray-400">Years of Experience</div>
               </div>
               <div className="space-y-2">
@@ -467,7 +502,7 @@ export default function MinePage() {
                 <div className="text-gray-400">Countries Served</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-green-500">3</div>
+                <div className="text-3xl font-bold text-green-500">2</div>
                 <div className="text-gray-400">Generations</div>
               </div>
             </div>
