@@ -1,5 +1,6 @@
 "use client"
 
+import { Metadata } from 'next'
 import { useState } from 'react'
 import PageWrapper from '@/components/layout/page-wrapper'
 import Header from '@/components/layout/header'

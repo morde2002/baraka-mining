@@ -1,9 +1,32 @@
+import { Metadata } from 'next'
 import PageWrapper from '@/components/layout/page-wrapper'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Premium Tsavorite Gemstones - Cut & Rough | Baraka Mining Kenya',
+  description: 'Explore our exquisite collection of premium Tsavorite gemstones. Expert cut stones (round, pear, trilliant, oval, emerald, cushion) and natural rough crystals. Ethically sourced from Taita Taveta, Kenya. Wholesale and custom cutting available.',
+  keywords: 'buy Tsavorite Kenya, Tsavorite gemstones for sale, rough Tsavorite crystals, cut Tsavorite stones, round cut Tsavorite, pear shaped Tsavorite, premium gemstones Kenya, natural Tsavorite rough, gemstone wholesale Kenya, custom gem cutting, Tsavorite supplier, investment grade gemstones',
+  openGraph: {
+    title: 'Premium Tsavorite Collection - Cut & Rough Gemstones | Baraka Mining',
+    description: 'Premium cut and rough Tsavorite gemstones directly from Kenyan mines. Investment-grade quality with expert craftsmanship.',
+    url: 'https://barakaminingltd.co.ke/gems',
+    images: [
+      {
+        url: '/service-1.png',
+        width: 1200,
+        height: 630,
+        alt: 'Premium Tsavorite Gemstone Collection - Baraka Mining',
+      }
+    ],
+  },
+  alternates: {
+    canonical: 'https://barakaminingltd.co.ke/gems',
+  }
+}
 
 const gemCuts = [
   {
@@ -46,16 +69,22 @@ const gemCuts = [
 
 const roughTsavorites = [
   {
+    id: 'rough-tsavorite-1',
     image: '/rough-tsavorite1.jpg',
-    title: 'Premium Rough Tsavorite'
+    title: 'Premium Rough Tsavorite',
+    description: 'High-quality natural crystal formation'
   },
   {
+    id: 'rough-tsavorite-2',
     image: '/rough-tsavorite2.jpg',
-    title: 'Natural Tsavorite Crystal'
+    title: 'Natural Tsavorite Crystal',
+    description: 'Pristine uncut specimen with excellent color'
   },
   {
+    id: 'rough-tsavorite-3',
     image: '/rough-tsavorite3.jpg',
-    title: 'Raw Tsavorite Specimen'
+    title: 'Raw Tsavorite Specimen',
+    description: 'Natural formation showcasing vivid green hues'
   }
 ]
 
@@ -150,33 +179,35 @@ export default function GemsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               {roughTsavorites.map((gem, index) => (
-                <Card key={index} className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-105 transition-all duration-300 hover:border-green-600/50">
-                  <CardContent className="p-0">
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={gem.image || "/placeholder.svg"}
-                        alt={gem.title}
-                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute top-4 right-4">
-                        <div className="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                          Natural
+                <Link key={index} href={`/gems/${gem.id}`}>
+                  <Card className="bg-gray-800 border-gray-700 overflow-hidden group hover:scale-105 transition-all duration-300 cursor-pointer hover:border-green-600/50">
+                    <CardContent className="p-0">
+                      <div className="relative overflow-hidden">
+                        <img
+                          src={gem.image || "/placeholder.svg"}
+                          alt={gem.title}
+                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute top-4 right-4">
+                          <div className="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                            Natural
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
-                        {gem.title}
-                      </h3>
-                      <p className="text-white text-sm mt-1">Raw & Uncut</p>
-                      <div className="text-green-500 font-medium flex items-center">
-                        View Details 
-                        <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                          {gem.title}
+                        </h3>
+                        <p className="text-gray-300 text-sm mb-4">{gem.description}</p>
+                        <div className="text-green-500 font-medium flex items-center">
+                          View Details 
+                          <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
 

@@ -1,7 +1,30 @@
+import { Metadata } from 'next'
 import PageWrapper from '@/components/layout/page-wrapper'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import { Card, CardContent } from '@/components/ui/card'
+
+export const metadata: Metadata = {
+  title: 'About Us - Elizabeth Wanjiru Legacy | Baraka Mining & Minerals LTD',
+  description: 'Meet the remarkable team behind Baraka Mining. Founded by Elizabeth Wanjiru "The Queen of Green" in 1977, we are Kenya\'s first woman-owned mining company with 85+ years of combined expertise in ethical Tsavorite gemstone mining.',
+  keywords: 'Baraka Mining about, Elizabeth Wanjiru, Queen of Green, woman miner Kenya, Gladwell Wangui, Christopher Kilio Maina, ethical mining Kenya, Tsavorite mining company, family mining business, mining leadership Kenya, sustainable gemstone company',
+  openGraph: {
+    title: 'About Baraka Mining - Two Generations of Mining Excellence',
+    description: 'Discover the inspiring story of Elizabeth Wanjiru and the Baraka Mining family. Kenya\'s pioneering woman-owned Tsavorite mining company since 1977.',
+    url: 'https://barakaminingltd.co.ke/about',
+    images: [
+      {
+        url: '/mr-and-mrs-kilio.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Baraka Mining Leadership - Mr and Mrs Kilio',
+      }
+    ],
+  },
+  alternates: {
+    canonical: 'https://barakaminingltd.co.ke/about',
+  }
+}
 
 export default function AboutPage() {
   return (

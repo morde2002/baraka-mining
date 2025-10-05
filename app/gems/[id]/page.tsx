@@ -106,7 +106,7 @@ const gemData = {
   'emerald-shaped': {
     id: 'emerald-shaped',
     name: 'Emerald Shaped Tsavorite Cut',
-    image: '/service-2.png',
+    image: '/emarald.png',
     gallery: ['/service-2.png', '/service-3.jpg', '/service-1.png'],
     price: 'Contact for pricing',
     description: 'Rectangular step cut highlighting clarity and color intensity. Sophisticated choice that emphasizes the natural beauty of Tsavorite.',
@@ -149,6 +149,90 @@ const gemData = {
       'Vintage-inspired elegance',
       'Excellent light performance',
       'Soft, rounded corners'
+    ]
+  },
+  'rough-tsavorite-1': {
+    id: 'rough-tsavorite-1',
+    name: 'Premium Rough Tsavorite',
+    image: '/rough-tsavorite1.jpg',
+    gallery: ['/rough-tsavorite1.jpg', '/rough-tsavorite2.jpg', '/rough-tsavorite3.jpg'],
+    price: 'Contact for pricing',
+    description: 'High-quality natural crystal formation showcasing the raw beauty of Tsavorite in its natural state. This premium rough specimen exhibits exceptional color saturation and crystal structure, perfect for custom cutting or collectors.',
+    specifications: {
+      crystal_form: 'Dodecahedral/Natural Mass',
+      formation: 'Natural Uncut',
+      crystal_system: 'Cubic (Isometric)',
+      color: 'Vivid Green',
+      origin: 'Taita Taveta, Kenya',
+      hardness: '7.5 Mohs',
+      refractive_index: '1.743',
+      specific_gravity: '3.60 - 3.68',
+      luster: 'Vitreous to Subadamantine',
+      composition: 'Ca₃Al₂(SiO₄)₃'
+    },
+    features: [
+      'Natural dodecahedral crystal formation',
+      'Premium grade rough material',
+      'Exceptional color intensity',
+      'Ideal for custom cutting projects',
+      'Collector-grade specimen',
+      'Contains trace chromium and vanadium'
+    ]
+  },
+  'rough-tsavorite-2': {
+    id: 'rough-tsavorite-2',
+    name: 'Natural Tsavorite Crystal',
+    image: '/rough-tsavorite2.jpg',
+    gallery: ['/rough-tsavorite2.jpg', '/rough-tsavorite1.jpg', '/rough-tsavorite3.jpg'],
+    price: 'Contact for pricing',
+    description: 'Pristine uncut specimen with excellent color displaying the natural crystalline structure of Kenyan Tsavorite. A rare find showcasing the gemstone in its purest form, ideal for investment or bespoke jewelry creation.',
+    specifications: {
+      crystal_form: 'Prismatic Shards/Mass',
+      formation: 'Natural Uncut',
+      crystal_system: 'Cubic (Isometric)',
+      color: 'Vivid to Deep Green',
+      origin: 'Taita Taveta, Kenya',
+      hardness: '7.5 Mohs',
+      refractive_index: '1.743',
+      specific_gravity: '3.60 - 3.68',
+      luster: 'Vitreous',
+      composition: 'Ca₃Al₂(SiO₄)₃'
+    },
+    features: [
+      'Pristine natural crystal structure',
+      'Investment-grade rough material',
+      'Excellent clarity potential',
+      'Rare crystal formation',
+      'Perfect for museum collections',
+      'High refractive index for brilliance'
+    ]
+  },
+  'rough-tsavorite-3': {
+    id: 'rough-tsavorite-3',
+    name: 'Raw Tsavorite Specimen',
+    image: '/rough-tsavorite3.jpg',
+    gallery: ['/rough-tsavorite3.jpg', '/rough-tsavorite1.jpg', '/rough-tsavorite2.jpg'],
+    price: 'Contact for pricing',
+    description: 'Natural formation showcasing vivid green hues in raw crystalline form. This exceptional specimen demonstrates the intense natural coloration that makes Tsavorite one of the most sought-after garnets, straight from our Kenyan mines.',
+    specifications: {
+      crystal_form: 'Granular/Massive',
+      formation: 'Natural Uncut',
+      crystal_system: 'Cubic (Isometric)',
+      color: 'Intense Vivid Green',
+      origin: 'Taita Taveta, Kenya',
+      hardness: '7.5 Mohs',
+      refractive_index: '1.743',
+      specific_gravity: '3.60 - 3.68',
+      luster: 'Vitreous to Subadamantine',
+      composition: 'Ca₃Al₂(SiO₄)₃'
+    },
+    features: [
+      'Intense natural color saturation',
+      'Rare large crystal formation',
+      'Museum or investment quality',
+      'Metamorphic origin authenticity',
+      'Perfect for custom gem cutting',
+      'Exceptional durability for rough handling'
     ]
   }
 }
